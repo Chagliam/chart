@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.FileDialog;
 
 import paintBWave.Wave;
+import util.ConstantUtil;
 
 import javax.sound.midi.Soundbank;
 import javax.swing.JFrame;
@@ -43,7 +44,7 @@ import java.awt.Dimension;
 /*
  * MainUI类，数据段 所有UI组件 ，主要涉及对UI的操作
  */
-public class MainUI {
+public class MainUI implements ConstantUtil {
 	
 	/*应用范围最大的数据*/
     public MyFile myfile; //用于读取文件的类
@@ -63,7 +64,7 @@ public class MainUI {
 	private FileDialog log_open;//文件对话框
 	
 	/*绘制数据的面板*/
-	private  Wave originWave = null; //绘制原始数据的画板
+	private Wave originWave = null; //绘制原始数据的画板
     private JScrollPane originJScrollpanel = null; //拖动画板的滑动条
     private JScrollBar  originHJScrollBar = null;
     private JScrollBar  originVJScrollBar = null;
@@ -471,9 +472,9 @@ public class MainUI {
 	{
 		if(myfile != null) //文件已打开读入
 		{
-			System.out.println("wenjian1");
+			System.out.println("文件已读入");
 		   /*设置绘制源数据的面板*/
-		   int ReadDataNumber = 1000;
+		   int ReadDataNumber = defaultReadFileLength;
 		   originPaintData = myfile.getBytes(ReadDataNumber);//调用myfile类读入数据，并封装传给 originPaintData
 		   originWave.setPaintData(originPaintData); //将originPaintData传入绘制源数据的面板
 		   int width = originWave.getMyWidth();

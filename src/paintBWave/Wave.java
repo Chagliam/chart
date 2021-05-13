@@ -1,5 +1,6 @@
 package paintBWave;
 import File.*;
+import util.ConstantUtil;
 
 import javax.swing.*;  
 import java.awt.*;
@@ -7,23 +8,23 @@ import java.io.IOException;
 /*
  * 绘制波形的JPanel
  */
-public class Wave extends JPanel {  
+public class Wave extends JPanel implements ConstantUtil {
  
 	public DataStructureOfReadData paintData=null; //绘制数据
   
-    public float extension =1; //横向扩展比例 
-    private float increase=1; //纵向增大比例
+    public float extension = defaultExtension; //横向扩展比例
+    private float increase = defaultIncrease; //纵向增大比例
     
-    private int frame_X = 30;//框架x坐标
-    private int frame_Y = 20;//框架y坐标
-    private int origin_frame_height = 300;//高度
+    private int frame_X = defaultFrame_X;//框架x坐标
+    private int frame_Y = defaultFrame_Y;//框架y坐标
+    private int origin_frame_height = defaultFrame_Height;//高度
     
 	//原点坐标
     private int origin_X;
     private int origin_Y;
     
     //x，y轴终点坐标
-    private int originDelta = 4; //初始x轴点间隔
+    private int originDelta = defaultDelta; //初始x轴点间隔
     private int XAxis_X ;
     private int XAxis_Y ;
     private int YAxis_X ;
@@ -50,7 +51,7 @@ public class Wave extends JPanel {
         int xDelta = (int)(originDelta*extension); //实际点的间隔
     	int frame_width =(int)xDelta*paintData.getRealLength();
         int frame_height = (int)(origin_frame_height*increase);
-        int extra = 10;
+        int extra = defaultExtra;
         
         origin_X = frame_X;
     	origin_Y = frame_Y+frame_height+extra;  // 从上到下画的，需要加个frame高
@@ -68,7 +69,7 @@ public class Wave extends JPanel {
     	/*设置必要变量*/
     	int numberOfPaint = paintData.getRealLength();
     	byte[] bytesPrint = paintData.getBytes();
-    	int originDelta = 4; //初始点间隔
+    	int originDelta = defaultDelta; //初始点间隔
         int xDelta = (int)(originDelta*extension); //点的间隔
         int move = (int) (origin_frame_height*increase/2);
        
@@ -96,7 +97,7 @@ public class Wave extends JPanel {
     {
     	
         //画坐标轴
-    	int arrow = 3;
+    	int arrow = arrowLength;
     	g2d.setStroke(new BasicStroke(Float.parseFloat("2.0F")));
          //x轴
         g2d.drawLine(origin_X, origin_Y, XAxis_X, XAxis_Y);
@@ -113,14 +114,14 @@ public class Wave extends JPanel {
         
         int xDelta = (int)(originDelta*extension); //点的间隔
         int number = paintData.getRealLength(); // 有多长
-        int origin_XAxis_space=40; //x轴原始跨度 
+        int origin_XAxis_space=defaultXAxis_space; //x轴原始跨度
         int XAxis_space; //x轴跨度
        
         int start = (int) paintData.getStart();
         int frame_width = number*xDelta;
         int frame_height = (int)(origin_frame_height*increase);
         
-        if(extension>1)       
+        if(extension>defaultExtension)
             XAxis_space = (int) (origin_XAxis_space*extension);
         else
             XAxis_space = (int) (origin_XAxis_space);
@@ -129,18 +130,18 @@ public class Wave extends JPanel {
         g2d.setStroke(new BasicStroke(Float.parseFloat("1.0f")));
         {
         	/*设置绘制x轴参数*/
-        	int move = 10; 
-        	int calibration_X = 0;
-        	int calibration_length = 3; // 刻度长度
-        	int calibration_number = 0; // 刻度值
-        	int calibration_number_x = 0;   // 刻度指坐标
+        	int move = defaultMovement;
+        	int calibration_X = startUpZero;
+        	int calibration_length = defaultCalibrationLength; // 刻度长度
+        	int calibration_number = startUpZero; // 刻度值
+        	int calibration_number_x = startUpZero;   // 刻度指坐标
         	int calibration_number_y = XAxis_Y+move;
         	/*开始绘制x轴*/
         	for(int i=0,j=start;(j-start)<=frame_width;i++,j+=XAxis_space)
         	{   
         		/*初始化画x刻度线参数*/
         		calibration_X = origin_X+i*XAxis_space;
-        		calibration_length = 3;
+        		calibration_length = defaultCalibrationLength;
         		/*绘制x轴刻度线*/
         		g2d.drawLine(calibration_X, XAxis_Y,calibration_X, XAxis_Y-calibration_length);
         		/*初始化x轴刻度变量*/
@@ -153,33 +154,33 @@ public class Wave extends JPanel {
        //画y轴刻度
        {   
     	   /*设置绘制参数*/
-    	   int origin_YAxis_space = 50;
+    	   int origin_YAxis_space = defaultYAxis_space;
     	   int YAxis_space = (int)(origin_YAxis_space * increase);
     	   int paintSign = (int) (-frame_height/2);
     	   int increment = (int) (YAxis_space);
     	   int paintLineNumber = frame_height/YAxis_space;
            /*绘制y轴刻度*/
-    	   int move_x = 25;
-    	   int move_y = 3;
+    	   int move_x = adjustMoveOnX;
+    	   int move_y = adjustMoveOnY;
     	   for(int i=0,j=0;i<=paintLineNumber;i++,j+=YAxis_space)
     	   {
        			g2d.drawString((paintSign)+"", origin_X-move_x, origin_Y-j+move_y);
        			paintSign = increment+paintSign;
     	   }
     	   /*绘制y轴箭头*/
-    	   int arrow_y = 5;
+    	   int arrow_y = arrowLength;
     	   g2d.drawString("y轴", YAxis_X-arrow_y, YAxis_Y-arrow_y);
        }
        //y轴虚线划分
        {  
     	  /*设置绘制y轴虚线变量*/
-    	  int origin_YAxis_space = 50;
+    	  int origin_YAxis_space = defaultYAxis_space;
     	  int YAxis_space = (int)(origin_YAxis_space * increase);
     	  int paintLineNumber = frame_height/YAxis_space;
-    	  float width = 0.8f;
+    	  float width = defaultDashWidth;
     	  int cap = BasicStroke.CAP_BUTT;
     	  int join = BasicStroke.JOIN_ROUND;
-    	  float miterlimit = 3.5f;
+    	  float miterlimit = defaultMiterLimit;
     	  float[] dash = new float[] { 15, 10, };
     	  float dash_phase = 0f;
           Stroke mydash = new BasicStroke(width,cap,join, miterlimit, dash,dash_phase);
@@ -240,7 +241,7 @@ public class Wave extends JPanel {
     {   
         int xDelta = (int)(originDelta*extension); //点的间隔
     	int frame_width =(int)xDelta*paintData.getRealLength();
-        int extra = 20;
+        int extra = defaultExtra*2;
         return frame_width+frame_X+extra;
     }
     
@@ -251,7 +252,7 @@ public class Wave extends JPanel {
     {
     	int xDelta = (int)(originDelta*extension); //点的间隔
         int frame_height = (int)(origin_frame_height*increase);
-        int extra = 20;
+        int extra = defaultExtra*2;
         return frame_Y+frame_height+extra;
     }
     
